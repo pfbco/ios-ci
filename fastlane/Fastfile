@@ -6,48 +6,73 @@
 #     https://docs.fastlane.tools/actions
 #
 
+require "yaml"
+
+config = YAML.load(File.read("config.yml"))
+
 default_platform(:ios)
 
 before_all do |lane, options|
 
-    # Trying to load Xcode version
-    if ENV['XCODE_VERSION']
-        xcversion(version: ENV['XCODE_VERSION'])
-    elsif File.exist?("../xcode.version")
-        xcversion(version: File.read("../xcode.version").strip)
-    end
-
+  # Trying to load Xcode version
+  if ENV["XCODE_VERSION"]
+    xcversion(version: ENV["XCODE_VERSION"])
+  elsif File.exist?("../xcode.version")
+    xcversion(version: File.read("../xcode.version").strip)
+  end
 end
-
 
 desc "Download and install a specific Xcode version"
 lane :get_xcode do |options|
-    begin
-        ensure_xcode_version version: options[:version]
-        UI.success "Xcode " + options[:version] + " is already installed"
-    rescue => ex
-        UI.error ex
-        xcode_install version: options[:version]
-        reset
-    end
+  begin
+    ensure_xcode_version version: options[:version]
+    UI.success "Xcode " + options[:version] + " is already installed"
+  rescue => ex
+    UI.error ex
+    xcode_install version: options[:version]
+    reset
+  end
 end
-
 
 desc "Reset environment"
 lane :reset do
-    clear_derived_data
-    reset_simulator_contents
-    xcclean
-    clean_build_artifacts
+  clear_derived_data
+  reset_simulator_contents
+  xcclean
+  clean_build_artifacts
 end
-
 
 desc "Get current version of the project"
 lane :get_version do
-    current_version = get_version_number(
-        xcodeproj: project,
-        target: target,
-        configuration: configuration
+  current_version = get_version_number(
+    xcodeproj: project,
+    target: target,
+    configuration: configuration,
+  )
+  UI.message "Current version: " + current_version
+end
+
+desc "Install project dependencies"
+lane :dependencies do
+  unless !File.exist?("Cartfile")
+    carthage(
+      platform: "ios",
+      cache_builds: true,
     )
-    UI.message "Current version: " + current_version
+  end
+  unless !File.exist?("Podfile")
+    cocoapods(
+      podfile: "PodFile",
+      verbose: true,
+    )
+  end
+end
+
+desc "Runs all the tests"
+lane :tests do
+  scan(
+    project: project,
+    scheme: target,
+    configuration: configuration,
+  )
 end

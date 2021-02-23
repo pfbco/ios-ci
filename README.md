@@ -1,6 +1,6 @@
 # ios-ci
 
-Resources to enable or improve CI/CD stack for iOS apps.
+Resources to enable or improve CI/CD stack for iOS apps (work in progress).
 
 ### Requirements
 

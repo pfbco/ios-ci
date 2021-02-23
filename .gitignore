@@ -1,5 +1,5 @@
 # fastlane specific
-**/fastlane/report.xml
+**/fastlane/reports/*.*
 
 # deliver temporary files
 **/fastlane/Preview.html
@@ -10,6 +10,7 @@
 # scan temporary files
 **/fastlane/test_output
 
+# Build artifacts, logs, binaries and others
 Carthage
 DerivedData
 .DS_STORE

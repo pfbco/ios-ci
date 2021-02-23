@@ -1,0 +1,39 @@
+---
+project:
+  file: MyApp.xcodeproj
+  xcode: 12.0.1
+  sdk:
+  targets:
+    - MyApp
+    - FlavorB
+    - FlavorC
+  configurations:
+    - Debug
+    - Release
+
+account:
+  username: appleid@icloud.com
+
+teams:
+  - id: 5AP10B9J9N
+    name: Company Enterprise team
+    type: Enterprise
+    username: appleid@icloud.com
+    apps:
+      myapp: com.company.myapp
+
+  - id: 935D5T54D6
+    name: Company App Store team
+    type: Developer
+    username: appleid@icloud.com
+    apps:
+      myApp: com.domain.myapp
+
+build:
+
+
+tests:
+  code_coverage: true
+  devices:
+    - iPhone 8
+    - iPhone 6s
