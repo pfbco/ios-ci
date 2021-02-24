@@ -7,18 +7,21 @@
 #
 
 require "yaml"
+require "ostruct"
 
-config = YAML.load(File.read("config.yml"))
+config = OpenStruct.new YAML.load(File.read("config.yml"))
 
+project = config.project["entry"]
 target = ""
 configuration = ""
 
-project = config["project"]["entry"]
-targets = config["project"]["targets"]
-configurations = config["project"]["configurations"]
+targets = config.project["targets"]
+configurations = config.project["configurations"]
 
 default_platform(:ios)
 
+#
+# Common code executed before any custom lane
 before_all do |lane, options|
 
   # Trying to load Xcode version
@@ -28,11 +31,13 @@ before_all do |lane, options|
     xcversion(version: File.read("../xcode.version").strip)
   end
 
+  # Checking target as parameter
   target = targets[0]
   if options[:target] and targets.include? options[:target]
     target = options[:target]
   end
 
+  # Set the first item from config as the default configuration
   configuration = configurations[0]
 end
 
@@ -85,12 +90,11 @@ end
 
 desc "Runs all the tests"
 lane :tests do
+  #
   scan(
     project: project,
     scheme: target,
     configuration: configuration,
-    output_types: "junit,html",
-    force_quit_simulator: true,
-    reset_simulator: true,
+    output_directory: "./fastlane/test_results",
   )
 end

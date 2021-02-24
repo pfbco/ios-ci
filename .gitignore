@@ -8,7 +8,7 @@
 **/fastlane/screenshots
 
 # scan temporary files
-**/fastlane/test_output
+**/fastlane/test_results
 
 # Build artifacts, logs, binaries and others
 Pods/
