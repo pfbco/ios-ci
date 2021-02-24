@@ -11,8 +11,20 @@
 **/fastlane/test_output
 
 # Build artifacts, logs, binaries and others
-Carthage
+Pods/
+Carthage/
+vendor/
 DerivedData
-.DS_STORE
-*.log
+.bundle
 *.ipa
+**/xcuserdata
+*.pbxuser
+*.mode1v3
+*.dSYM.zip
+
+# Others
+.DS_Store
+*.log
+
+# Sample app source
+Ratios*

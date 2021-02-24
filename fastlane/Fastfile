@@ -10,6 +10,13 @@ require "yaml"
 
 config = YAML.load(File.read("config.yml"))
 
+target = ""
+configuration = ""
+
+project = config["project"]["entry"]
+targets = config["project"]["targets"]
+configurations = config["project"]["configurations"]
+
 default_platform(:ios)
 
 before_all do |lane, options|
@@ -20,10 +27,17 @@ before_all do |lane, options|
   elsif File.exist?("../xcode.version")
     xcversion(version: File.read("../xcode.version").strip)
   end
+
+  target = targets[0]
+  if options[:target] and targets.include? options[:target]
+    target = options[:target]
+  end
+
+  configuration = configurations[0]
 end
 
 desc "Download and install a specific Xcode version"
-lane :get_xcode do |options|
+lane :xcode do |options|
   begin
     ensure_xcode_version version: options[:version]
     UI.success "Xcode " + options[:version] + " is already installed"
@@ -54,13 +68,14 @@ end
 
 desc "Install project dependencies"
 lane :dependencies do
-  unless !File.exist?("Cartfile")
+  unless !File.exist?("../Cartfile")
     carthage(
       platform: "ios",
       cache_builds: true,
+      use_xcframeworks: true,
     )
   end
-  unless !File.exist?("Podfile")
+  unless !File.exist?("../Podfile")
     cocoapods(
       podfile: "PodFile",
       verbose: true,
@@ -74,5 +89,8 @@ lane :tests do
     project: project,
     scheme: target,
     configuration: configuration,
+    output_types: "junit,html",
+    force_quit_simulator: true,
+    reset_simulator: true,
   )
 end
