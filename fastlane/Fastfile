@@ -95,6 +95,25 @@ lane :tests do
     project: project,
     scheme: target,
     configuration: configuration,
-    output_directory: "./fastlane/test_results",
+    output_directory: "./output/tests",
+  )
+end
+
+desc "Build app"
+lane :build do |options|
+
+  # Build app to be used on simulator
+  gym(
+    project: project,
+    scheme: target,
+    configuration: configuration,
+    clean: false,
+    archive_path: "./output/archive/",
+    skip_codesigning: true,
+    skip_package_ipa: true,
+    skip_archive: false,
+    build_path: "./output/build",
+    output_directory: "./output/binaries",
+    output_name: "#{target}-#{configuration}",
   )
 end

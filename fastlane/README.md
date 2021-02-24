@@ -44,7 +44,7 @@ Runs all the tests
 ```
 fastlane build
 ```
-Build application
+Build app
 
 ----
 

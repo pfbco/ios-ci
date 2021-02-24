@@ -1,14 +1,7 @@
-# fastlane specific
+# fastlane generated files
 **/fastlane/reports/*.*
-
-# deliver temporary files
 **/fastlane/Preview.html
-
-# snapshot generated screenshots
-**/fastlane/screenshots
-
-# scan temporary files
-**/fastlane/test_results
+**/output
 
 # Build artifacts, logs, binaries and others
 Pods/
